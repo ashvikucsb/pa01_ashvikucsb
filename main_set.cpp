@@ -1,5 +1,3 @@
-// This file should implement the game using the std::set container class
-// Do not include card_list.h in this file
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,17 +6,20 @@
 
 using namespace std;
 
-void readHand(istream& input, set<Card>& hand) {
+bool readHand(istream& input, set<Card>& hand) {
   char suit;
   string rank;
-  while (input >> suit >> rank) {
+  while (input >> suit) {
+    if (!(input >> rank)){
+      return false;
+    }
     Card::Suit cardSuit;
     switch (suit) {
       case 'c': cardSuit = Card::Suit::c; break;
       case 'd': cardSuit = Card::Suit::d; break;
       case 's': cardSuit = Card::Suit::s; break;
       case 'h': cardSuit = Card::Suit::h; break;
-      default: input.setstate(ios::failbit); return;
+      default: return false;
     }
 
     int value;
@@ -31,15 +32,15 @@ void readHand(istream& input, set<Card>& hand) {
       value = rank[0] - '0';
     } 
     else {
-      input.setstate(ios::failbit);
-      return;
+      return false;
     }
     hand.insert(Card(cardSuit, static_cast<Card::Rank>(value)));
   }
+  return input.eof() && !input.bad();
 }
 
 int main(int argc, char** argv){
-  if(argc < 3){
+  if(argc != 3){
     cout << "Please provide 2 file names" << endl;
     return 1;
   }
@@ -53,8 +54,10 @@ int main(int argc, char** argv){
   }
 
   set<Card> alice, bob;
-  readHand(cardFile1, alice);
-  readHand(cardFile2, bob);
+  if (!readHand(cardFile1, alice) || !readHand(cardFile2, bob)){
+    cout << "Invalid card input" << endl;
+    return 1;
+  }
 
   bool aliceTurn = true;
   while (true) {
@@ -85,3 +88,4 @@ int main(int argc, char** argv){
 
   return 0;
 }
+

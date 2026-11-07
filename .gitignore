@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+
+/game
+/game_set
+/tests
+*.o
