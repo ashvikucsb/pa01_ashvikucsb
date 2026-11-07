@@ -13,7 +13,7 @@ tests: card.o card_list.o tests.o
 	${CXX} ${CXXFLAGS} card.o card_list.o tests.o -o tests
 	./tests
 
-main_set.o: main_set.cpp
+main_set.o: main_set.cpp card.h
 	${CXX} ${CXXFLAGS} main_set.cpp -c
 
 main.o: main.cpp
